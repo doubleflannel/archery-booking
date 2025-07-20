@@ -1,6 +1,6 @@
 // app.js - Shared API wrapper and session management
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbygwD7cJvKEeUVX_-OJ0OZ6QNMtUkNFZnXmC4f-rrKyVMItPwUwJ_nurtpZNintPD8Ufg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyJ4wMOJnYinjKRxBGVMl9D_zgUOonOIn0s7q5yn2T_AwK0n7Pv8fnV2zPg5W1wEk8XSQ/exec';
 
 // Session management
 const Session = {
