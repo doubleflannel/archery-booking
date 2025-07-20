@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Range Booking - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Archery Range Booking</h1>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button onclick="logout()" class="btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Available Slots Section -->
+            <div class="card">
+                <h2>Available Slots</h2>
+                
+                <div class="filters">
+                    <select id="rangeFilter">
+                        <option value="">All Ranges</option>
+                        <option value="REG">Regular Range</option>
+                        <option value="TGT">Target Range</option>
+                        <option value="AUT">Automated Range</option>
+                        <option value="BGR">Beginner Range</option>
+                    </select>
+                    
+                    <input type="date" id="dateFilter">
+                    
+                    <button onclick="loadAvailability()" class="btn-secondary">Search</button>
+                </div>
+
+                <div id="availableSlots" class="slots-grid">
+                    <p>Click Search to view available slots</p>
+                </div>
+            </div>
+
+            <!-- My Bookings Section -->
+            <div class="card">
+                <h2>My Bookings</h2>
+                <div id="myBookings" class="bookings-list">
+                    <p>Loading bookings...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/user.js"></script>
+</body>
+</html>

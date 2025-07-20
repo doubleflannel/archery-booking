@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Range Booking - Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button onclick="logout()" class="btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div class="admin-grid">
+            <!-- Add New Slot Section -->
+            <div class="card">
+                <h2>Add New Time Slot</h2>
+                
+                <form id="addSlotForm">
+                    <div class="form-group">
+                        <label for="newRangeType">Range Type:</label>
+                        <select id="newRangeType" required>
+                            <option value="">Select Range</option>
+                            <option value="REG">Regular Range</option>
+                            <option value="TGT">Target Range</option>
+                            <option value="AUT">Automated Range</option>
+                            <option value="BGR">Beginner Range</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newDate">Date:</label>
+                        <input type="date" id="newDate" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newStartTime">Start Time:</label>
+                            <input type="time" id="newStartTime" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newEndTime">End Time:</label>
+                            <input type="time" id="newEndTime" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="addSlotBtn" class="btn-primary">
+                        Add Slot
+                    </button>
+                </form>
+            </div>
+
+            <!-- All Slots Management -->
+            <div class="card">
+                <h2>Manage All Slots</h2>
+                
+                <div class="filters">
+                    <select id="adminRangeFilter">
+                        <option value="">All Ranges</option>
+                        <option value="REG">Regular Range</option>
+                        <option value="TGT">Target Range</option>
+                        <option value="AUT">Automated Range</option>
+                        <option value="BGR">Beginner Range</option>
+                    </select>
+                    
+                    <input type="date" id="adminDateFilter">
+                    
+                    <button onclick="loadAllSlots()" class="btn-secondary">Search</button>
+                </div>
+
+                <div id="allSlots" class="admin-slots">
+                    <p>Click Search to view all slots</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
