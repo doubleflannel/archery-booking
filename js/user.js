@@ -115,6 +115,14 @@ async function loadMyBookings() {
     }
 }
 
+function canCancelBooking(booking) {
+    // Check if booking is more than 12 hours away
+    const bookingDateTime = new Date(booking.date + ' ' + booking.startTime);
+    const now = new Date();
+    const hoursUntilBooking = (bookingDateTime - now) / (1000 * 60 * 60);
+    return hoursUntilBooking >= 12;
+}
+
 function displayMyBookings(bookings) {
     const container = document.getElementById('myBookings');
     
@@ -123,21 +131,27 @@ function displayMyBookings(bookings) {
         return;
     }
     
-    const bookingsHTML = bookings.map(booking => `
-        <div class="booking-card">
-            <div class="booking-info">
-                <h4>${formatDate(booking.date)} • ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</h4>
-                <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
-                <p class="lane-code-small">🎯 Code: <strong>${booking.laneCode || 'N/A'}</strong></p>
-                <p class="booking-meta">Booked ${formatDate(booking.bookingTime)}</p>
+    const bookingsHTML = bookings.map(booking => {
+        const canCancel = canCancelBooking(booking);
+        const cancelButton = canCancel 
+            ? `<button onclick="cancelBooking('${booking.bookingId}')" class="btn-danger">Cancel</button>`
+            : `<button class="btn-disabled" disabled title="Cannot cancel within 12 hours">Cannot Cancel</button>`;
+            
+        return `
+            <div class="booking-card">
+                <div class="booking-info">
+                    <h4>${formatDate(booking.date)} • ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</h4>
+                    <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
+                    <p class="lane-code-small">🎯 Code: <strong>${booking.laneCode || 'N/A'}</strong></p>
+                    <p class="booking-meta">Booked ${formatDate(booking.bookingTime)}</p>
+                    ${!canCancel ? '<p class="cancellation-warning">⚠️ Cannot cancel within 12 hours of start time</p>' : ''}
+                </div>
+                <div class="booking-actions">
+                    ${cancelButton}
+                </div>
             </div>
-            <div class="booking-actions">
-                <button onclick="cancelBooking('${booking.bookingId}')" class="btn-danger">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     container.innerHTML = bookingsHTML;
 }
