@@ -84,10 +84,48 @@ async function bookSlot(timeSlotId) {
 }
 
 async function loadMyBookings() {
-    // Since we don't have a getMyBookings endpoint, we'll simulate it
-    // In a real app, you'd add this endpoint to the backend
+    const session = Session.get();
     const container = document.getElementById('myBookings');
-    container.innerHTML = '<p>Note: This demo shows a simplified booking list. In production, you would implement a getMyBookings API endpoint.</p>';
+    
+    try {
+        const result = await apiCall('getMyBookings', { userId: session.userId });
+        
+        if (result.success) {
+            displayMyBookings(result.bookings);
+        } else {
+            container.innerHTML = `<p>Error loading bookings: ${result.message}</p>`;
+        }
+    } catch (error) {
+        container.innerHTML = '<p>Failed to load bookings</p>';
+    }
+}
+
+function displayMyBookings(bookings) {
+    const container = document.getElementById('myBookings');
+    
+    if (bookings.length === 0) {
+        container.innerHTML = '<p>You have no active bookings</p>';
+        return;
+    }
+    
+    const bookingsHTML = bookings.map(booking => `
+        <div class="booking-card">
+            <div class="booking-info">
+                <h4>Booking #${booking.bookingId}</h4>
+                <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
+                <p><strong>Date:</strong> ${formatDate(booking.date)}</p>
+                <p><strong>Time:</strong> ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</p>
+                <p><strong>Booked:</strong> ${formatDate(booking.bookingTime)}</p>
+            </div>
+            <div class="booking-actions">
+                <button onclick="cancelBooking('${booking.bookingId}')" class="btn-danger">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = bookingsHTML;
 }
 
 async function cancelBooking(bookingId) {

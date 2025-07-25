@@ -66,47 +66,45 @@ async function handleAddSlot(e) {
 }
 
 async function loadAllSlots() {
-    const rangeTypeId = document.getElementById('adminRangeFilter').value;
-    const date = document.getElementById('adminDateFilter').value;
-    
+    const session = Session.get();
     hideError();
     
     try {
-        // Get all slots (available and booked)
-        const result = await apiCall('getAvailability', { rangeTypeId, date });
+        // Get all bookings for admin view
+        const result = await apiCall('getAllBookings', { userId: session.userId });
         
         if (result.success) {
-            displayAllSlots(result.slots);
+            displayAllBookings(result.bookings);
         } else {
-            showError(result.error || 'Failed to load slots');
+            showError(result.message || 'Failed to load bookings');
         }
     } catch (error) {
-        showError('Failed to load slots');
+        showError('Failed to load bookings');
     }
 }
 
-function displayAllSlots(slots) {
+function displayAllBookings(bookings) {
     const container = document.getElementById('allSlots');
     
-    if (slots.length === 0) {
-        container.innerHTML = '<p>No slots found for the selected criteria</p>';
+    if (bookings.length === 0) {
+        container.innerHTML = '<p>No active bookings found</p>';
         return;
     }
     
-    // Note: This currently only shows available slots since our API doesn't return booked slots
-    // In a full implementation, you'd add a getAllSlots endpoint
-    const slotsHTML = slots.map(slot => `
+    const bookingsHTML = bookings.map(booking => `
         <div class="admin-slot-card">
             <div class="slot-details">
-                <h4>Slot ID: ${slot.timeSlotId}</h4>
-                <p><strong>Range:</strong> ${slot.rangeTypeId}</p>
-                <p><strong>Date:</strong> ${formatDate(slot.date)}</p>
-                <p><strong>Time:</strong> ${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}</p>
-                <p><strong>Status:</strong> <span class="status-available">Available</span></p>
+                <h4>Booking #${booking.bookingId}</h4>
+                <p><strong>Customer:</strong> ${booking.userName} (${booking.userEmail})</p>
+                <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
+                <p><strong>Date:</strong> ${formatDate(booking.date)}</p>
+                <p><strong>Time:</strong> ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</p>
+                <p><strong>Booked:</strong> ${formatDate(booking.bookingTime)}</p>
+                <p><strong>Status:</strong> <span class="status-booked">${booking.status}</span></p>
             </div>
             <div class="slot-actions">
-                <button onclick="deleteSlot('${slot.timeSlotId}')" class="btn-danger">
-                    Delete Slot
+                <button onclick="adminCancelBooking('${booking.bookingId}')" class="btn-danger">
+                    Cancel Booking
                 </button>
             </div>
         </div>
@@ -114,10 +112,10 @@ function displayAllSlots(slots) {
     
     container.innerHTML = `
         <div class="slots-header">
-            <p><strong>Note:</strong> This view currently shows only available slots. 
-            In production, you would implement a comprehensive admin API to view all slots and bookings.</p>
+            <h3>All Active Bookings</h3>
+            <p>Manage all customer bookings from this admin panel.</p>
         </div>
-        ${slotsHTML}
+        ${bookingsHTML}
     `;
 }
 
