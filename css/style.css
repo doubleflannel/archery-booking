@@ -336,6 +336,24 @@ header h1 {
     margin: 8px 0 !important;
 }
 
+.lane-code-small {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #075985;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.85em !important;
+    margin: 4px 0 !important;
+    display: inline-block;
+}
+
+.booking-meta {
+    font-size: 0.8em !important;
+    color: #9ca3af !important;
+    font-style: italic;
+    margin-top: 8px !important;
+}
+
 /* Error Messages */
 .error {
     background: #fed7d7;

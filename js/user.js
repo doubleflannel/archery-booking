@@ -126,12 +126,10 @@ function displayMyBookings(bookings) {
     const bookingsHTML = bookings.map(booking => `
         <div class="booking-card">
             <div class="booking-info">
-                <h4>Booking #${booking.bookingId}</h4>
-                <p class="lane-code"><strong>🎯 Lane Code: ${booking.laneCode || 'N/A'}</strong></p>
+                <h4>${formatDate(booking.date)} • ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</h4>
                 <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
-                <p><strong>Date:</strong> ${formatDate(booking.date)}</p>
-                <p><strong>Time:</strong> ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</p>
-                <p><strong>Booked:</strong> ${formatDate(booking.bookingTime)}</p>
+                <p class="lane-code-small">🎯 Code: <strong>${booking.laneCode || 'N/A'}</strong></p>
+                <p class="booking-meta">Booked ${formatDate(booking.bookingTime)}</p>
             </div>
             <div class="booking-actions">
                 <button onclick="cancelBooking('${booking.bookingId}')" class="btn-danger">
