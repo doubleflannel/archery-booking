@@ -74,7 +74,7 @@ async function bookSlot(timeSlotId) {
         });
         
         if (result.success) {
-            alert(`Booking confirmed! Booking ID: ${result.bookingId}`);
+            alert(`Booking confirmed!\nBooking ID: ${result.bookingId}\n🎯 Lane Code: ${result.laneCode}\n\nUse this code to unlock your lane!`);
             loadAvailability(); // Refresh available slots
             loadMyBookings(); // Refresh my bookings
         } else {
@@ -114,6 +114,7 @@ function displayMyBookings(bookings) {
         <div class="booking-card">
             <div class="booking-info">
                 <h4>Booking #${booking.bookingId}</h4>
+                <p class="lane-code"><strong>🎯 Lane Code: ${booking.laneCode || 'N/A'}</strong></p>
                 <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
                 <p><strong>Date:</strong> ${formatDate(booking.date)}</p>
                 <p><strong>Time:</strong> ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</p>

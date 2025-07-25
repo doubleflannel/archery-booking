@@ -326,6 +326,16 @@ header h1 {
     flex-shrink: 0;
 }
 
+.lane-code {
+    background: #e6fffa;
+    border: 1px solid #38b2ac;
+    color: #234e52;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 1.1em !important;
+    margin: 8px 0 !important;
+}
+
 /* Error Messages */
 .error {
     background: #fed7d7;
