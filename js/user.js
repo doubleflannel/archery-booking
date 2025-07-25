@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('dateFilter').value = today;
     
-    // Load initial data
+    // Load initial data - show all available slots by default
+    document.getElementById('rangeFilter').value = '';
+    document.getElementById('dateFilter').value = '';
     loadAvailability();
     loadMyBookings();
 });
