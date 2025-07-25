@@ -65,6 +65,14 @@ function displayAvailableSlots(slots) {
 
 async function bookSlot(timeSlotId) {
     const session = Session.get();
+    const button = event.target;
+    
+    // Show loading state
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳ Booking...';
+    button.disabled = true;
+    button.classList.add('loading');
+    
     hideError();
     
     try {
@@ -82,6 +90,11 @@ async function bookSlot(timeSlotId) {
         }
     } catch (error) {
         showError('Booking failed. Please try again.');
+    } finally {
+        // Reset button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.classList.remove('loading');
     }
 }
 
@@ -138,6 +151,12 @@ async function cancelBooking(bookingId) {
         return;
     }
     
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳ Cancelling...';
+    button.disabled = true;
+    button.classList.add('loading');
+    
     hideError();
     
     try {
@@ -155,5 +174,12 @@ async function cancelBooking(bookingId) {
         }
     } catch (error) {
         showError('Cancellation failed. Please try again.');
+    } finally {
+        // Reset button state if button still exists
+        if (button && button.parentNode) {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            button.classList.remove('loading');
+        }
     }
 }
