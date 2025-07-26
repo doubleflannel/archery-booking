@@ -299,6 +299,21 @@ header h1 {
     color: var(--warm-white);
 }
 
+/* Admin Help Text */
+.admin-help-text {
+    background: rgba(139, 69, 19, 0.1);
+    border: 1px solid rgba(139, 69, 19, 0.3);
+    border-radius: 8px;
+    padding: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.admin-help-text p {
+    margin: 0;
+    color: var(--paper-white);
+    font-size: var(--text-xs);
+}
+
 /* Forms */
 .form-group {
     margin-bottom: var(--space-lg);

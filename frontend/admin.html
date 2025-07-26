@@ -44,7 +44,7 @@
 
         <!-- All Slots Management -->
         <div class="card main-slots-card">
-            <h2>Manage All Slots</h2>
+            <h2>Manage All Slots & Bookings</h2>
                 
                 <div class="compact-filters">
                     <select id="adminRangeFilter">
@@ -58,8 +58,14 @@
                     <button onclick="loadAllSlots()" class="btn-secondary-compact">Search</button>
                 </div>
 
+                <div class="admin-help-text">
+                    <p class="compact-text">
+                        📋 <strong>Admin Actions:</strong> Cancel any booking • Delete empty slots • View customer details
+                    </p>
+                </div>
+
                 <div id="allSlots" class="admin-slots-compact">
-                    <p class="compact-text">Click Search to view all slots</p>
+                    <p class="compact-text">Loading all slots...</p>
                 </div>
             </div>
     </div>
