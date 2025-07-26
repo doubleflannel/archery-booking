@@ -123,14 +123,14 @@ function displayAllSlots(slots) {
             `;
             actionButton = `
                 <button onclick="adminCancelBooking('${slot.bookingId}')" class="btn-danger">
-                    Cancel Booking
+                    🔄 Free Up Slot
                 </button>
             `;
         } else {
             customerInfo = '<p><em>Available for booking</em></p>';
             actionButton = `
                 <button onclick="deleteSlot('${slot.timeSlotId}')" class="btn-secondary">
-                    Delete Slot
+                    🗑️ Remove Permanently
                 </button>
             `;
         }
@@ -165,20 +165,20 @@ function displayAllSlots(slots) {
 }
 
 async function deleteSlot(timeSlotId) {
-    if (!confirm('Are you sure you want to delete this slot? This action cannot be undone.')) {
+    if (!confirm('⚠️ PERMANENTLY REMOVE this time slot?\n\nThis will completely delete the slot and cannot be undone.\nAny future bookings for this time will no longer be possible.')) {
         return;
     }
     
     // Note: We don't have a deleteSlot endpoint in our current API
     // This would need to be implemented in the backend
-    alert('Delete slot functionality would be implemented in the backend API.');
+    alert('⚠️ Permanent slot removal functionality needs to be implemented in the backend API.\n\nFor now, you can manually remove slots from the Google Sheet.');
 }
 
 // Function to cancel any booking (admin privilege)
 async function adminCancelBooking(bookingId) {
     const session = Session.get();
     
-    if (!confirm('Are you sure you want to cancel this booking?')) {
+    if (!confirm('🔄 FREE UP this booked slot?\n\nThis will cancel the customer\'s booking and make the slot available for others to book.')) {
         return;
     }
     
@@ -191,10 +191,10 @@ async function adminCancelBooking(bookingId) {
         });
         
         if (result.success) {
-            alert('Booking cancelled successfully');
+            alert('✅ Slot freed up successfully!\n\nThe booking has been cancelled and the slot is now available for new bookings.');
             loadAllSlots(); // Refresh view
         } else {
-            showError(result.message || 'Cancellation failed');
+            showError(result.message || 'Failed to free up slot');
         }
     } catch (error) {
         showError('Cancellation failed. Please try again.');
