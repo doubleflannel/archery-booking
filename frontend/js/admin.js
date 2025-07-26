@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up form handler
     document.getElementById('addSlotForm').addEventListener('submit', handleAddSlot);
     
-    // Load initial data
+    // Auto-load all slots on page load
     loadAllSlots();
 });
 

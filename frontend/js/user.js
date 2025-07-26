@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('dateFilter').value = '';
     loadAvailability();
     loadMyBookings();
+    
+    // Set up guest booking form handler
+    document.getElementById('guestForm').addEventListener('submit', handleGuestBooking);
 });
 
 async function loadAvailability() {
@@ -193,5 +196,82 @@ async function cancelBooking(bookingId) {
             button.disabled = false;
             button.classList.remove('loading');
         }
+    }
+}
+
+// Guest booking functionality
+function showGuestBooking() {
+    const form = document.getElementById('guestBookingForm');
+    form.style.display = 'block';
+    populateGuestSlots();
+    
+    // Scroll to form
+    form.scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideGuestBooking() {
+    document.getElementById('guestBookingForm').style.display = 'none';
+}
+
+async function populateGuestSlots() {
+    try {
+        const result = await apiCall('getAvailability', { rangeTypeId: '', date: '' });
+        const select = document.getElementById('guestSlot');
+        
+        if (result.success && result.slots.length > 0) {
+            const options = result.slots.map(slot => 
+                `<option value="${slot.timeSlotId}">
+                    ${slot.rangeTypeId} Range - ${formatDate(slot.date)} at ${formatTime(slot.startTime)}-${formatTime(slot.endTime)}
+                </option>`
+            ).join('');
+            
+            select.innerHTML = '<option value="">Choose a slot...</option>' + options;
+        } else {
+            select.innerHTML = '<option value="">No slots available</option>';
+        }
+    } catch (error) {
+        console.error('Failed to load slots for guest booking:', error);
+    }
+}
+
+async function handleGuestBooking(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('guestName').value;
+    const email = document.getElementById('guestEmail').value;
+    const timeSlotId = document.getElementById('guestSlot').value;
+    
+    if (!name || !email || !timeSlotId) {
+        showError('Please fill in all fields');
+        return;
+    }
+    
+    const submitBtn = document.querySelector('#guestForm button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Booking...';
+    submitBtn.disabled = true;
+    
+    hideError();
+    
+    try {
+        const result = await apiCall('bookGuest', {
+            name: name,
+            email: email,
+            timeSlotId: timeSlotId
+        });
+        
+        if (result.success) {
+            alert(`Guest booking confirmed!\nBooking ID: ${result.bookingId}\n🎯 Lane Code: ${result.laneCode}\n\nName: ${name}\nEmail: ${email}\n\nUse this code to unlock your lane!`);
+            hideGuestBooking();
+            document.getElementById('guestForm').reset();
+            loadAvailability(); // Refresh available slots
+        } else {
+            showError(result.message || 'Guest booking failed');
+        }
+    } catch (error) {
+        showError('Guest booking failed. Please try again.');
+    } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     }
 }
