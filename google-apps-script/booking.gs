@@ -23,17 +23,30 @@ function booking_create({ userId, timeSlotId }) {
     // Generate unique lane code
     const laneCode = generateUniqueLaneCode();
     
-    // Create booking record
+    // Create booking record with backward compatibility
     const bookingId = nextId('BookingsNextID');
-    appendRowToSheet('Bookings', {
+    
+    // Check which schema the Bookings sheet uses
+    const bookingsSheet = getSheet('Bookings');
+    const bookingsHeaders = bookingsSheet.getRange(1, 1, 1, bookingsSheet.getLastColumn()).getValues()[0];
+    
+    const bookingData = {
       BookingID: bookingId,
       TimeSlotID: timeSlotId,
-      CustomerID: userId,
-      CustomerType: 'member',
       BookingTime: new Date(),
       Status: 'Active',
       LaneCode: laneCode
-    });
+    };
+    
+    // Use new schema if CustomerID exists, otherwise use old UserID schema
+    if (bookingsHeaders.includes('CustomerID')) {
+      bookingData.CustomerID = userId;
+      bookingData.CustomerType = 'Member';
+    } else {
+      bookingData.UserID = userId;
+    }
+    
+    appendRowToSheet('Bookings', bookingData);
     
     return { success: true, bookingId, laneCode };
   });
@@ -50,14 +63,23 @@ function booking_cancel({ userId, bookingId }) {
     return { success: false, message: 'Booking not found' };
   }
   
-  // Check authorization - updated for new schema
-  const bookingCustomerId = booking.values[booking.headers.indexOf('CustomerID')];
-  const bookingCustomerType = booking.values[booking.headers.indexOf('CustomerType')];
+  // Check authorization - handle both old and new schema
   const user = findRowByValue('Users', 'UserID', userId);
   const userRole = user ? user.values[user.headers.indexOf('Role')] : null;
   
   // Check if user owns this booking or is admin
-  const userOwnsBooking = (bookingCustomerType === 'member' && bookingCustomerId == userId);
+  let userOwnsBooking = false;
+  
+  if (booking.headers.includes('CustomerID')) {
+    // New schema: CustomerID + CustomerType
+    const bookingCustomerId = booking.values[booking.headers.indexOf('CustomerID')];
+    const bookingCustomerType = booking.values[booking.headers.indexOf('CustomerType')];
+    userOwnsBooking = (bookingCustomerType === 'Member' && bookingCustomerId == userId);
+  } else {
+    // Old schema: UserID only
+    const bookingUserId = booking.values[booking.headers.indexOf('UserID')];
+    userOwnsBooking = (bookingUserId == userId);
+  }
   
   if (!userOwnsBooking && userRole !== 'admin') {
     return { success: false, message: 'Not authorized' };
@@ -120,13 +142,22 @@ function booking_getMy({ userId }) {
   const userBookings = [];
   
   bookingsData.forEach(bookingRow => {
-    const customerIdIndex = bookingsHeaders.indexOf('CustomerID');
-    const customerTypeIndex = bookingsHeaders.indexOf('CustomerType');
     const statusIndex = bookingsHeaders.indexOf('Status');
     
-    // Only get active member bookings for this user
-    const isUserBooking = (bookingRow[customerIdIndex] == userId && 
-                          bookingRow[customerTypeIndex] === 'member');
+    // Check if this is the user's booking - handle both old and new schema
+    let isUserBooking = false;
+    
+    if (bookingsHeaders.includes('CustomerID')) {
+      // New schema: CustomerID + CustomerType
+      const customerIdIndex = bookingsHeaders.indexOf('CustomerID');
+      const customerTypeIndex = bookingsHeaders.indexOf('CustomerType');
+      isUserBooking = (bookingRow[customerIdIndex] == userId && 
+                      bookingRow[customerTypeIndex] === 'Member');
+    } else {
+      // Old schema: UserID only
+      const userIdIndex = bookingsHeaders.indexOf('UserID');
+      isUserBooking = (bookingRow[userIdIndex] == userId);
+    }
     
     if (isUserBooking && bookingRow[statusIndex] === 'Active') {
       const timeSlotIdIndex = bookingsHeaders.indexOf('TimeSlotID');

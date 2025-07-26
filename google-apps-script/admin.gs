@@ -175,35 +175,55 @@ function admin_getAllSlots({ userId, rangeTypeId, date }) {
       
       let customerInfo = null;
       if (booking) {
-        const customerId = booking[bookingsHeaders.indexOf('CustomerID')];
-        const customerType = booking[bookingsHeaders.indexOf('CustomerType')];
-        
-        if (customerType === 'Member') {
+        // Handle both old and new schema
+        if (bookingsHeaders.includes('CustomerID')) {
+          // New schema: CustomerID + CustomerType
+          const customerId = booking[bookingsHeaders.indexOf('CustomerID')];
+          const customerType = booking[bookingsHeaders.indexOf('CustomerType')];
+          
+          if (customerType === 'Member') {
+            const usersSheet = getSheet('Users');
+            const usersData = usersSheet.getDataRange().getValues();
+            const usersHeaders = usersData.shift();
+            const member = usersData.find(userRow => 
+              userRow[usersHeaders.indexOf('UserID')] == customerId
+            );
+            if (member) {
+              customerInfo = {
+                name: member[usersHeaders.indexOf('Name')] || member[usersHeaders.indexOf('Email')],
+                email: member[usersHeaders.indexOf('Email')],
+                type: 'Member'
+              };
+            }
+          } else if (customerType === 'Guest') {
+            const guestsSheet = getSheet('Guests');
+            const guestsData = guestsSheet.getDataRange().getValues();
+            const guestsHeaders = guestsData.shift();
+            const guest = guestsData.find(guestRow => 
+              guestRow[guestsHeaders.indexOf('GuestID')] == customerId
+            );
+            if (guest) {
+              customerInfo = {
+                name: guest[guestsHeaders.indexOf('Name')],
+                email: guest[guestsHeaders.indexOf('Email')],
+                type: 'Guest'
+              };
+            }
+          }
+        } else {
+          // Old schema: UserID only
+          const userId = booking[bookingsHeaders.indexOf('UserID')];
           const usersSheet = getSheet('Users');
           const usersData = usersSheet.getDataRange().getValues();
           const usersHeaders = usersData.shift();
           const member = usersData.find(userRow => 
-            userRow[usersHeaders.indexOf('UserID')] == customerId
+            userRow[usersHeaders.indexOf('UserID')] == userId
           );
           if (member) {
             customerInfo = {
               name: member[usersHeaders.indexOf('Name')] || member[usersHeaders.indexOf('Email')],
               email: member[usersHeaders.indexOf('Email')],
               type: 'Member'
-            };
-          }
-        } else if (customerType === 'Guest') {
-          const guestsSheet = getSheet('Guests');
-          const guestsData = guestsSheet.getDataRange().getValues();
-          const guestsHeaders = guestsData.shift();
-          const guest = guestsData.find(guestRow => 
-            guestRow[guestsHeaders.indexOf('GuestID')] == customerId
-          );
-          if (guest) {
-            customerInfo = {
-              name: guest[guestsHeaders.indexOf('Name')],
-              email: guest[guestsHeaders.indexOf('Email')],
-              type: 'Guest'
             };
           }
         }

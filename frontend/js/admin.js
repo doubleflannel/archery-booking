@@ -13,10 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('userName').textContent = `Admin: ${session.name}`;
     
-    // Set default date to today
+    // Set default date to today for new slot creation
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('newDate').value = today;
-    document.getElementById('adminDateFilter').value = today;
+    
+    // Leave admin date filter empty to show all dates by default
+    document.getElementById('adminDateFilter').value = '';
     
     // Set up form handler
     document.getElementById('addSlotForm').addEventListener('submit', handleAddSlot);
