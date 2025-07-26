@@ -113,20 +113,34 @@ function displayAllSlots(slots) {
         const statusClass = slot.isBooked ? 'status-booked' : 'status-available';
         const statusText = slot.isBooked ? 'Booked' : 'Available';
         
+        // Debug: Log problematic slots
+        if (slot.isBooked && !slot.customer) {
+            console.log('⚠️ Booked slot missing customer data:', slot);
+        }
+        
         let customerInfo = '';
         let actionButton = '';
         
-        if (slot.isBooked && slot.customer) {
-            customerInfo = `
-                <p><strong>Customer:</strong> ${slot.customer.name} (${slot.customer.email}) - ${slot.customer.type}</p>
-                <p><strong>Lane Code:</strong> <span class="lane-code-small">${slot.laneCode || 'N/A'}</span></p>
-            `;
+        if (slot.isBooked) {
+            // Slot is booked - show free up option
+            if (slot.customer) {
+                customerInfo = `
+                    <p><strong>Customer:</strong> ${slot.customer.name} (${slot.customer.email}) - ${slot.customer.type}</p>
+                    <p><strong>Lane Code:</strong> <span class="lane-code-small">${slot.laneCode || 'N/A'}</span></p>
+                `;
+            } else {
+                customerInfo = `
+                    <p><strong>Customer:</strong> Unknown (data missing)</p>
+                    <p><strong>Lane Code:</strong> <span class="lane-code-small">${slot.laneCode || 'N/A'}</span></p>
+                `;
+            }
             actionButton = `
                 <button onclick="adminCancelBooking('${slot.bookingId}')" class="btn-danger">
                     🔄 Free Up Slot
                 </button>
             `;
         } else {
+            // Slot is available - show delete option
             customerInfo = '<p><em>Available for booking</em></p>';
             actionButton = `
                 <button onclick="deleteSlot('${slot.timeSlotId}')" class="btn-secondary">
