@@ -190,13 +190,17 @@ function booking_getMy({ userId }) {
   return { success: true, bookings: userBookings };
 }
 
-function booking_createGuest({ timeSlotId, guestEmail, guestName }) {
-  if (!timeSlotId || !guestEmail || !guestName) {
-    return { success: false, message: 'timeSlotId, guestEmail, and guestName required' };
+function booking_createGuest({ timeSlotId, email, name, guestEmail, guestName }) {
+  // Support both parameter formats for backward compatibility
+  const finalEmail = email || guestEmail;
+  const finalName = name || guestName;
+  
+  if (!timeSlotId || !finalEmail || !finalName) {
+    return { success: false, message: 'timeSlotId, email, and name required' };
   }
 
   // Basic email validation
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(finalEmail)) {
     return { success: false, message: 'Invalid email format' };
   }
 
@@ -219,7 +223,7 @@ function booking_createGuest({ timeSlotId, guestEmail, guestName }) {
     const laneCode = generateUniqueLaneCode();
     
     // Find or create guest record (tracks repeat guests!)
-    const guestId = findOrCreateGuest(guestEmail, guestName);
+    const guestId = findOrCreateGuest(finalEmail, finalName);
     
     // Create booking record with clean schema
     const bookingId = nextId('BookingsNextID');

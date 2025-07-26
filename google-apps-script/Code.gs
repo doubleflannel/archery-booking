@@ -19,6 +19,9 @@ function doPost(e) {
       case 'book':
         result = booking_create(payload);
         break;
+      case 'bookGuest':
+        result = booking_createGuest(payload);
+        break;
       case 'cancel':
         result = booking_cancel(payload);
         break;
