@@ -67,55 +67,85 @@ async function handleAddSlot(e) {
 
 async function loadAllSlots() {
     const session = Session.get();
+    const rangeTypeId = document.getElementById('adminRangeFilter').value;
+    const date = document.getElementById('adminDateFilter').value;
+    
     hideError();
     
     try {
-        // Get all bookings for admin view
-        const result = await apiCall('getAllBookings', { userId: session.userId });
+        // Get all slots for admin view
+        const result = await apiCall('getAllSlots', { 
+            userId: session.userId,
+            rangeTypeId: rangeTypeId,
+            date: date
+        });
         
         if (result.success) {
-            displayAllBookings(result.bookings);
+            displayAllSlots(result.slots);
         } else {
-            showError(result.message || 'Failed to load bookings');
+            showError(result.message || 'Failed to load slots');
         }
     } catch (error) {
-        showError('Failed to load bookings');
+        showError('Failed to load slots');
     }
 }
 
-function displayAllBookings(bookings) {
+function displayAllSlots(slots) {
     const container = document.getElementById('allSlots');
     
-    if (bookings.length === 0) {
-        container.innerHTML = '<p>No active bookings found</p>';
+    if (slots.length === 0) {
+        container.innerHTML = '<p>No slots found for the selected filters</p>';
         return;
     }
     
-    const bookingsHTML = bookings.map(booking => `
-        <div class="admin-slot-card">
-            <div class="slot-details">
-                <h4>Booking #${booking.bookingId}</h4>
-                <p><strong>Customer:</strong> ${booking.userName} (${booking.userEmail})</p>
-                <p><strong>Range:</strong> ${booking.rangeTypeId}</p>
-                <p><strong>Date:</strong> ${formatDate(booking.date)}</p>
-                <p><strong>Time:</strong> ${formatTime(booking.startTime)} - ${formatTime(booking.endTime)}</p>
-                <p><strong>Booked:</strong> ${formatDate(booking.bookingTime)}</p>
-                <p><strong>Status:</strong> <span class="status-booked">${booking.status}</span></p>
-            </div>
-            <div class="slot-actions">
-                <button onclick="adminCancelBooking('${booking.bookingId}')" class="btn-danger">
+    const slotsHTML = slots.map(slot => {
+        const statusClass = slot.isBooked ? 'status-booked' : 'status-available';
+        const statusText = slot.isBooked ? 'Booked' : 'Available';
+        
+        let customerInfo = '';
+        let actionButton = '';
+        
+        if (slot.isBooked && slot.customer) {
+            customerInfo = `
+                <p><strong>Customer:</strong> ${slot.customer.name} (${slot.customer.email}) - ${slot.customer.type}</p>
+                <p><strong>Lane Code:</strong> <span class="lane-code-small">${slot.laneCode || 'N/A'}</span></p>
+            `;
+            actionButton = `
+                <button onclick="adminCancelBooking('${slot.bookingId}')" class="btn-danger">
                     Cancel Booking
                 </button>
+            `;
+        } else {
+            customerInfo = '<p><em>Available for booking</em></p>';
+            actionButton = `
+                <button onclick="deleteSlot('${slot.timeSlotId}')" class="btn-secondary">
+                    Delete Slot
+                </button>
+            `;
+        }
+        
+        return `
+            <div class="admin-slot-card">
+                <div class="slot-details">
+                    <h4>${slot.rangeTypeId} Range - Slot #${slot.timeSlotId}</h4>
+                    <p><strong>Date:</strong> ${formatDate(slot.date)}</p>
+                    <p><strong>Time:</strong> ${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}</p>
+                    <p><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></p>
+                    ${customerInfo}
+                </div>
+                <div class="slot-actions">
+                    ${actionButton}
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     container.innerHTML = `
         <div class="slots-header">
-            <h3>All Active Bookings</h3>
-            <p>Manage all customer bookings from this admin panel.</p>
+            <h3>All Time Slots</h3>
+            <p>Manage all time slots and their bookings. Use filters to narrow down results.</p>
         </div>
-        ${bookingsHTML}
+        ${slotsHTML}
     `;
 }
 

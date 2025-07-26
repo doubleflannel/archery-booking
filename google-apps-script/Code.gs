@@ -1,25 +1,6 @@
 // Code.gs - Main HTTP Router
 function doGet(e) {
-  return ContentService
-    .createTextOutput('')
-    .setMimeType(ContentService.MimeType.TEXT)
-    .setHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    });
-}
-
-function doOptions(e) {
-  return ContentService
-    .createTextOutput()
-    .setMimeType(ContentService.MimeType.TEXT)
-    .setHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Max-Age': '86400'
-    });
+  return ContentService.createTextOutput('');
 }
 
 function doPost(e) {
@@ -44,27 +25,26 @@ function doPost(e) {
       case 'addSlot':
         result = admin_addSlot(payload);
         break;
+      case 'getMyBookings':
+        result = booking_getMy(payload);
+        break;
+      case 'getAllBookings':
+        result = admin_getAll(payload);
+        break;
+      case 'getAllSlots':
+        result = admin_getAllSlots(payload);
+        break;
       default:
         result = { success: false, error: 'Unknown action: ' + action };
     }
 
     return ContentService
       .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      });
+      .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
     return ContentService
       .createTextOutput(JSON.stringify({ success: false, error: error.message }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      });
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
