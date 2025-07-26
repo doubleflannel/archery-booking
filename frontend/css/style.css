@@ -55,9 +55,10 @@ header h1 {
 
 .card h2 {
     color: #4a5568;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
+    font-size: 1.3em;
 }
 
 /* Login Form */
@@ -192,10 +193,57 @@ header h1 {
     gap: 30px;
 }
 
-.admin-grid {
+/* Compact Admin Layout */
+.add-slot-section {
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+.main-slots-card {
+    padding: 20px;
+}
+
+.collapsible-header {
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 0;
+}
+
+.collapsible-header h3 {
+    color: #4a5568;
+    font-size: 1em;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.collapsible-content {
+    margin-top: 15px;
+}
+
+.compact-form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.compact-form-row select,
+.compact-form-row input {
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.btn-primary-compact {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 /* Filters */
@@ -212,6 +260,32 @@ header h1 {
     border: 2px solid #e2e8f0;
     border-radius: 6px;
     font-size: 14px;
+}
+
+/* Compact Filters */
+.compact-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.compact-filters select,
+.compact-filters input {
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.btn-secondary-compact {
+    background: #e2e8f0;
+    color: #4a5568;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
 }
 
 /* Slots Display */
@@ -255,33 +329,46 @@ header h1 {
     overflow-y: auto;
 }
 
+/* Compact Admin Slots */
+.admin-slots-compact {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
 .slots-header {
     background: #edf2f7;
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    font-size: 0.9em;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 0.8em;
     color: #4a5568;
 }
 
 .admin-slot-card {
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 15px;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 0.85em;
 }
 
 .slot-details h4 {
     color: #4a5568;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    font-size: 0.9em;
 }
 
 .slot-details p {
-    margin: 3px 0;
-    font-size: 0.9em;
+    margin: 2px 0;
+    font-size: 0.8em;
+    color: #718096;
+}
+
+.compact-text {
+    font-size: 0.85em;
     color: #718096;
 }
 

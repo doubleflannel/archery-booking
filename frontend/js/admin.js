@@ -1,5 +1,11 @@
 // admin.js - Admin functionality
 
+function toggleAddSlot() {
+    const content = document.getElementById('addSlotContent');
+    const isVisible = content.style.display !== 'none';
+    content.style.display = isVisible ? 'none' : 'block';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check authentication and admin role
     if (!Session.requireAuth()) return;
