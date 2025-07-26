@@ -106,6 +106,9 @@ function displayAllSlots(slots) {
         return;
     }
     
+    // Debug: Log the first few slots to see the data structure
+    console.log('Admin slots data:', slots.slice(0, 3));
+    
     const slotsHTML = slots.map(slot => {
         const statusClass = slot.isBooked ? 'status-booked' : 'status-available';
         const statusText = slot.isBooked ? 'Booked' : 'Available';
@@ -148,9 +151,13 @@ function displayAllSlots(slots) {
         `;
     }).join('');
     
+    const bookedCount = slots.filter(slot => slot.isBooked).length;
+    const availableCount = slots.length - bookedCount;
+    
     container.innerHTML = `
         <div class="slots-header">
             <h3>All Time Slots</h3>
+            <p>📊 <strong>${bookedCount} Booked</strong> • <strong>${availableCount} Available</strong> • Total: ${slots.length}</p>
             <p>Manage all time slots and their bookings. Use filters to narrow down results.</p>
         </div>
         ${slotsHTML}
