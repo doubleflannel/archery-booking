@@ -38,10 +38,6 @@
                     <button onclick="loadMyBookings()" class="btn-secondary">Refresh Bookings</button>
                 </div>
                 
-                <div class="quick-actions">
-                    <button onclick="loadAvailability()" class="btn-primary">Show All Available Slots</button>
-                    <button onclick="showGuestBooking()" class="btn-secondary">Book as Guest</button>
-                </div>
 
                 <div id="availableSlots" class="slots-grid">
                     <p>Click Search to view available slots</p>
@@ -55,30 +51,6 @@
                     <p>Loading bookings...</p>
                 </div>
                 
-                <!-- Guest Booking Form (Hidden by default) -->
-                <div id="guestBookingForm" class="card" style="display: none; margin-top: 20px;">
-                    <h3>Book as Guest</h3>
-                    <form id="guestForm">
-                        <div class="form-group">
-                            <label for="guestName">Full Name:</label>
-                            <input type="text" id="guestName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="guestEmail">Email:</label>
-                            <input type="email" id="guestEmail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="guestSlot">Select Time Slot:</label>
-                            <select id="guestSlot" required>
-                                <option value="">Choose a slot...</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <button type="submit" class="btn-primary">Book Slot</button>
-                            <button type="button" onclick="hideGuestBooking()" class="btn-secondary">Cancel</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>

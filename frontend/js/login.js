@@ -1,5 +1,9 @@
 // login.js - Login functionality
 
+function showGuestBooking() {
+    window.location.href = 'guest.html';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Redirect if already logged in
     if (Session.isValid()) {

@@ -243,6 +243,62 @@ header h1 {
     font-size: var(--text-xs);
 }
 
+/* Guest Section */
+.guest-section {
+    margin: var(--space-xl) 0;
+    text-align: center;
+    padding: var(--space-lg) 0;
+    border-top: 1px solid rgba(139, 69, 19, 0.2);
+    border-bottom: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.guest-section p {
+    color: var(--steel-gray);
+    margin-bottom: var(--space-md);
+    font-size: var(--text-sm);
+}
+
+.guest-btn {
+    width: 100%;
+    font-weight: 600;
+}
+
+/* Guest Booking Page */
+.guest-booking-form {
+    background: rgba(64, 64, 64, 0.2);
+    border-radius: 12px;
+    padding: var(--space-lg);
+}
+
+.selected-slot-info {
+    background: rgba(53, 94, 59, 0.2);
+    border: 1px solid var(--forest-green);
+    border-radius: 8px;
+    padding: var(--space-md);
+    margin-top: var(--space-sm);
+}
+
+.selected-slot-details h4 {
+    color: var(--forest-green);
+    margin-bottom: var(--space-sm);
+}
+
+.selected-slot-details p {
+    margin: var(--space-xs) 0;
+    color: var(--paper-white);
+}
+
+.slot-card.selected {
+    border-color: var(--forest-green);
+    background: rgba(53, 94, 59, 0.2);
+    box-shadow: 0 0 0 2px rgba(53, 94, 59, 0.3);
+}
+
+.slot-card.selected button {
+    background: var(--forest-green);
+    color: var(--warm-white);
+}
+
 /* Forms */
 .form-group {
     margin-bottom: var(--space-lg);
